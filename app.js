@@ -189,6 +189,8 @@ class FullPageScroll {
         pg.classList.remove('is-active');
       } else if (i > idx) {
         pg.classList.remove('is-above', 'is-active');
+      } else {
+        pg.classList.remove('is-above');
       }
     });
 
