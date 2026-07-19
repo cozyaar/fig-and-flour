@@ -368,37 +368,38 @@ a { text-decoration: none; cursor: none; color: inherit; }
 
 .cake-hero-layout {
   position: relative; z-index: 2; height: 100%;
-  display: grid; grid-template-columns: 1.1fr 1.2fr;
-  gap: 5vw; align-items: center;
-  padding: 6rem 10vw 4rem 8vw;
+  display: grid; grid-template-columns: 1fr 1.1fr;
+  gap: 3vw; align-items: center;
+  padding: 5rem 8vw 2.5rem;
+  box-sizing: border-box;
 }
 .cake-hero-layout--reverse {
-  grid-template-columns: 1.2fr 1.1fr;
+  grid-template-columns: 1.1fr 1fr;
 }
-.cake-hero-details { max-width: 520px; }
+.cake-hero-details { max-width: 480px; }
 .cake-hero-tag {
-  font-family: var(--font-sans); font-size: 0.55rem;
+  font-family: var(--font-sans); font-size: 0.52rem;
   letter-spacing: 0.25em; text-transform: uppercase;
-  color: var(--gold-light); margin-bottom: 1.2rem;
+  color: var(--gold-light); margin-bottom: 0.8rem;
 }
 .cake-hero-title {
-  font-family: var(--font-display); font-size: clamp(3.2rem, 7vw, 6rem);
-  font-weight: 300; letter-spacing: -0.04em; line-height: 0.95;
+  font-family: var(--font-display); font-size: clamp(2.4rem, 5vw, 4.4rem);
+  font-weight: 300; letter-spacing: -0.03em; line-height: 1.0;
   color: var(--cream);
 }
 .cake-hero-title em { font-style: italic; color: var(--gold-light); }
 .cake-hero-desc {
-  font-family: var(--font-body); font-size: 1rem; line-height: 1.7;
-  color: rgba(250, 247, 242, 0.45); margin: 1.5rem 0 2rem;
+  font-family: var(--font-body); font-size: 0.95rem; line-height: 1.6;
+  color: rgba(250, 247, 242, 0.45); margin: 1.2rem 0;
 }
-.cake-hero-meta { display: flex; align-items: center; gap: 2rem; }
+.cake-hero-meta { display: flex; align-items: center; gap: 1.5rem; }
 .cake-hero-price {
-  font-family: var(--font-display); font-size: 2.2rem;
+  font-family: var(--font-display); font-size: 2rem;
   color: var(--gold-light); font-weight: 300;
 }
 .cake-hero-buy-btn {
-  padding: 0.85rem 2.2rem; background: var(--gold); color: var(--ink);
-  font-family: var(--font-sans); font-size: 0.6rem;
+  padding: 0.8rem 2rem; background: var(--gold); color: var(--ink);
+  font-family: var(--font-sans); font-size: 0.58rem;
   letter-spacing: 0.2em; text-transform: uppercase;
   transition: all 0.3s var(--ease-spring);
 }
@@ -406,16 +407,36 @@ a { text-decoration: none; cursor: none; color: inherit; }
 
 /* Giant editorial visual panel overlapping text */
 .cake-hero-visual {
-  height: 60vh; display: flex; align-items: center; justify-content: center;
+  height: 52vh; max-height: 380px; display: flex; align-items: center; justify-content: center;
 }
 .visual-wrap {
-  width: 100%; max-width: 440px; aspect-ratio: 1;
-  overflow: hidden; box-shadow: 0 30px 70px rgba(0, 0, 0, 0.5);
+  width: 100%; max-width: 380px; aspect-ratio: 1;
+  overflow: hidden; box-shadow: 0 25px 60px rgba(0, 0, 0, 0.45);
   border: 1px solid rgba(184, 149, 74, 0.15);
   position: relative;
   transition: transform 0.6s var(--ease-out);
 }
 .cake-hero-layout:hover .visual-wrap { transform: scale(1.03) rotate(1deg); }
+
+/* Small viewport height overrides */
+@media (max-height: 800px) {
+  .cake-hero-layout { padding: 4.5rem 8vw 2.2rem; }
+  .cake-hero-title { font-size: clamp(2rem, 4vw, 3.5rem); }
+  .cake-hero-desc { margin: 0.8rem 0; font-size: 0.9rem; line-height: 1.55; }
+  .cake-hero-visual { height: 42vh; max-height: 320px; }
+  .visual-wrap { max-width: 320px; }
+}
+
+@media (max-height: 680px) {
+  .cake-hero-layout { padding: 4rem 6vw 2rem; }
+  .cake-hero-title { font-size: clamp(1.8rem, 3.5vw, 2.8rem); }
+  .cake-hero-desc { margin: 0.6rem 0; font-size: 0.85rem; line-height: 1.5; }
+  .cake-hero-visual { height: 36vh; max-height: 260px; }
+  .visual-wrap { max-width: 260px; }
+  .cake-hero-meta { gap: 1rem; }
+  .cake-hero-price { font-size: 1.6rem; }
+  .cake-hero-buy-btn { padding: 0.7rem 1.6rem; font-size: 0.55rem; }
+}
 
 .hero-bottom-ticker {
   position: absolute; bottom: 0; left: 0; right: 0;
