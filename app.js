@@ -1,6 +1,6 @@
 /* ===================================================
-   FIG & FLOUR — Unified Interactive JavaScript
-   Natural Scrolling Edition. Fully Responsive.
+   FIG & FLOUR — Luxury Unified Card-Stacking JS
+   Awwwards-Inspired. Fully Responsive.
    =================================================== */
 
 'use strict';
@@ -16,17 +16,10 @@ const state = {
   menuFilter: 'all',
   menuSearch: '',
   menuSort: 'default',
-  currentTestimonial: 0,
-  currentHeroShowcase: 0
+  currentTestimonial: 0
 };
 
-/* ─── Product & Showcase Data ─────────────────────── */
-const SIGNATURE_CAKES = [
-  { name: 'Signature Pistachio Rose Cake', tag: 'Chef\'s Special', img: 'product_cake.jpg', desc: 'Persian pistachio flour sponge layers, infused with organic rose water syrup and finished with light cardamom cream.', price: 2199 },
-  { name: 'Madagascar Vanilla Drip Cake', tag: 'Bestseller', img: 'product_cake.jpg', desc: 'Fluffy Madagascar vanilla bean sponge, layers of wild berry compote, topped with gold-flecked Swiss buttercream.', price: 1899 },
-  { name: 'Gold Flake Dark Chocolate Cake', tag: 'Luxury Tier', img: 'product_cake.jpg', desc: 'Dense 72% Valrhona dark chocolate cake, salted chocolate ganache filling, wrapped in edible 24k gold leaf details.', price: 2499 }
-];
-
+/* ─── Product Data ───────────────────────────────── */
 const PRODUCTS = [
   { id: 1, name: 'Signature Vanilla Drip Cake', category: 'cakes', img: 'product_cake.jpg', price: 1899, oldPrice: 2299, rating: 5, reviews: 312, time: '48hr notice', calories: 420, desc: 'Three layers of Madagascar vanilla sponge, Swiss meringue buttercream, fresh berry compote.', badges: ['bestseller'] },
   { id: 2, name: 'Paris-Brest Croissant', category: 'pastries', img: 'product_croissant.jpg', price: 299, oldPrice: null, rating: 5, reviews: 487, time: '15 min', calories: 280, desc: 'Laminated butter croissant with 81 flaky layers. Baked fresh every morning by 7 AM.', badges: ['special'] },
@@ -44,10 +37,10 @@ const TESTIMONIALS = [
   { name: 'Rohan Mehta', location: 'Juhu, Mumbai', rating: 5, text: "I've been a regular at Fig & Flour for six years. Nothing else in Mumbai comes close. The croissants every Saturday morning are my weekly ritual." },
   { name: 'Preethi Krishnan', location: 'Lower Parel', rating: 5, text: "Ordered a custom birthday cake for my daughter's 7th birthday — a unicorn castle with real edible gold. The look on face was worth every rupee." },
   { name: 'Samira Sheikh', location: 'Worli, Mumbai', rating: 5, text: "As a food critic, I've visited patisseries across Paris, Tokyo and New York. Fig & Flour belongs in the same conversation. Their macarons are genuinely world-class." },
-  { name: 'Samira Sheikh', location: 'Worli, Mumbai', rating: 5, text: "As a food critic, I've visited patisseries across Paris, Tokyo and New York. Fig & Flour belongs in the same conversation. Their macarons are genuinely world-class." },
   { name: 'Vikram Anand', location: 'Powai, Mumbai', rating: 5, text: "The Gold Flake Brownies are criminally good. I've tried stopping myself from ordering every week and I simply cannot. Five stars, zero regrets." },
   { name: 'Meera Pillai', location: 'Chembur, Mumbai', rating: 4, text: "Beautiful packaging, exceptional quality, incredibly helpful staff. They went out of their way to accommodate a last-minute custom order. So grateful!" },
-  { name: 'Arjun Das', location: 'Andheri, Mumbai', rating: 5, text: "Corporate event with 200 guests, and Fig & Flour delivered 400 pastries on time, perfectly presented. Not a single complaint — only compliments!" }
+  { name: 'Arjun Das', location: 'Andheri, Mumbai', rating: 5, text: "Corporate event with 200 guests, and Fig & Flour delivered 400 pastries on time, perfectly presented. Not a single complaint — only compliments!" },
+  { name: 'Nandini Rao', location: 'Colaba, Mumbai', rating: 5, text: "The berry cheesecake is legitimately the best I've ever had. Light, creamy, perfectly balanced. Thank you, Fig & Flour!" }
 ];
 
 /* ─── DOM Selector Helpers ──────────────────────── */
@@ -55,6 +48,217 @@ const $ = (sel, ctx = document) => ctx.querySelector(sel);
 const $$ = (sel, ctx = document) => [...ctx.querySelectorAll(sel)];
 const formatINR = n => '₹' + n.toLocaleString('en-IN');
 const lerp = (a, b, t) => a * (1 - t) + b * t;
+
+/* ─── Card Stacking Scroll Engine ────────────────── */
+class CardStackingScroll {
+  constructor() {
+    this.pages = $$('.pg');
+    this.currentIndex = 0;
+    this.isTransitioning = false;
+    this.dots = $$('.pnav-dot');
+    this.pageCounterCurr = $('#pgcCurrent');
+    this.pageCounterTotal = $('#pgcTotal');
+    this.nav = $('#page-nav');
+    this.ctr = $('#page-counter');
+    this.startY = 0;
+
+    this.init();
+  }
+
+  init() {
+    if (this.pageCounterTotal) {
+      this.pageCounterTotal.textContent = String(this.pages.length).padStart(2, '0');
+    }
+
+    // Set initial classes
+    this.pages.forEach((pg, i) => {
+      pg.classList.remove('is-active', 'is-above', 'is-transitioning');
+      if (i === 0) {
+        pg.classList.add('is-active');
+      }
+    });
+
+    // Listeners
+    window.addEventListener('wheel', e => this.handleWheel(e), { passive: false });
+    window.addEventListener('keydown', e => this.handleKeydown(e));
+    window.addEventListener('touchstart', e => this.handleTouchStart(e), { passive: true });
+    window.addEventListener('touchmove', e => this.handleTouchMove(e), { passive: false });
+
+    // Dot Navigation Clicks
+    this.dots.forEach((dot, idx) => {
+      dot.addEventListener('click', () => {
+        this.goTo(idx);
+      });
+    });
+
+    this.updateUI();
+    this.triggerEntryAnimations(0);
+  }
+
+  handleWheel(e) {
+    const activePage = this.pages[this.currentIndex];
+    if (activePage.classList.contains('pg--scroll')) {
+      const atTop = activePage.scrollTop <= 0;
+      const atBottom = activePage.scrollTop + activePage.clientHeight >= activePage.scrollHeight - 2;
+
+      // Scroll inside section
+      if (e.deltaY > 0 && !atBottom) return;
+      if (e.deltaY < 0 && !atTop) return;
+    }
+
+    e.preventDefault();
+    if (this.isTransitioning) return;
+
+    if (e.deltaY > 30) {
+      this.goTo(this.currentIndex + 1);
+    } else if (e.deltaY < -30) {
+      this.goTo(this.currentIndex - 1);
+    }
+  }
+
+  handleKeydown(e) {
+    if (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA') return;
+
+    const activePage = this.pages[this.currentIndex];
+    if (activePage.classList.contains('pg--scroll')) {
+      const atTop = activePage.scrollTop <= 0;
+      const atBottom = activePage.scrollTop + activePage.clientHeight >= activePage.scrollHeight - 2;
+
+      if ((e.key === 'ArrowDown' || e.key === 'PageDown') && !atBottom) return;
+      if ((e.key === 'ArrowUp' || e.key === 'PageUp') && !atTop) return;
+    }
+
+    if (this.isTransitioning) return;
+
+    if (e.key === 'ArrowDown' || e.key === 'PageDown' || e.key === ' ') {
+      e.preventDefault();
+      this.goTo(this.currentIndex + 1);
+    } else if (e.key === 'ArrowUp' || e.key === 'PageUp') {
+      e.preventDefault();
+      this.goTo(this.currentIndex - 1);
+    }
+  }
+
+  handleTouchStart(e) {
+    this.startY = e.touches[0].clientY;
+  }
+
+  handleTouchMove(e) {
+    const activePage = this.pages[this.currentIndex];
+    const currentY = e.touches[0].clientY;
+    const diff = this.startY - currentY;
+
+    if (activePage.classList.contains('pg--scroll')) {
+      const atTop = activePage.scrollTop <= 0;
+      const atBottom = activePage.scrollTop + activePage.clientHeight >= activePage.scrollHeight - 2;
+
+      if (diff > 0 && !atBottom) return;
+      if (diff < 0 && !atTop) return;
+    }
+
+    if (Math.abs(diff) > 40) {
+      if (e.cancelable) e.preventDefault();
+      if (this.isTransitioning) return;
+
+      if (diff > 0) {
+        this.goTo(this.currentIndex + 1);
+      } else {
+        this.goTo(this.currentIndex - 1);
+      }
+    }
+  }
+
+  goTo(idx) {
+    if (idx < 0 || idx >= this.pages.length) return;
+    if (this.currentIndex === idx) return;
+
+    this.isTransitioning = true;
+    const prevIndex = this.currentIndex;
+    this.currentIndex = idx;
+
+    const prevPage = this.pages[prevIndex];
+    const currPage = this.pages[idx];
+
+    // Card Stack Setup
+    this.pages.forEach((pg, i) => {
+      pg.classList.remove('is-transitioning');
+      if (i < idx) {
+        pg.classList.add('is-above');
+        pg.classList.remove('is-active');
+      } else if (i > idx) {
+        pg.classList.remove('is-above', 'is-active');
+      } else {
+        pg.classList.remove('is-above');
+      }
+    });
+
+    // Forced reflow
+    currPage.clientHeight;
+
+    currPage.classList.add('is-transitioning');
+    prevPage.classList.add('is-transitioning');
+
+    currPage.classList.add('is-active');
+    prevPage.classList.remove('is-active');
+
+    // UI elements update
+    this.updateUI();
+
+    // Remove animation classes from all other pages so they re-trigger next time
+    this.pages.forEach((pg, i) => {
+      if (i !== idx) {
+        $$('.pg-anim-item', pg).forEach(item => item.classList.remove('animated'));
+      }
+    });
+
+    setTimeout(() => {
+      this.isTransitioning = false;
+      this.triggerEntryAnimations(idx);
+    }, 1000);
+  }
+
+  updateUI() {
+    // Navigation indicator dots
+    this.dots.forEach((dot, idx) => {
+      dot.classList.toggle('active', idx === this.currentIndex);
+    });
+
+    // Page text counter update
+    if (this.pageCounterCurr) {
+      this.pageCounterCurr.textContent = String(this.currentIndex + 1).padStart(2, '0');
+    }
+
+    // Adaptive tinting checks (e.g. pg-cream vs dark pages)
+    const activePage = this.pages[this.currentIndex];
+    const isLightTheme = activePage.classList.contains('pg-cream');
+    
+    if (this.nav) this.nav.classList.toggle('nav-on-light', isLightTheme);
+    if (this.ctr) this.ctr.classList.toggle('ctr-on-light', isLightTheme);
+
+    const siteHeader = $('#siteHeader');
+    if (siteHeader) {
+      if (isLightTheme) {
+        siteHeader.style.setProperty('--nav-text-color', 'var(--chocolate)');
+        siteHeader.style.setProperty('--nav-text-muted', 'rgba(107,58,36,0.6)');
+      } else {
+        siteHeader.style.setProperty('--nav-text-color', 'var(--cream)');
+        siteHeader.style.setProperty('--nav-text-muted', 'var(--gold-muted)');
+      }
+    }
+  }
+
+  triggerEntryAnimations(idx) {
+    const page = this.pages[idx];
+    $$('.pg-anim-item', page).forEach(item => item.classList.add('animated'));
+
+    // Countup triggers
+    if (idx === 4) {
+      animateStats();
+    }
+  }
+}
+
+let fps;
 
 /* ─── Custom Smooth Cursor ───────────────────────── */
 (function initCursor() {
@@ -79,7 +283,7 @@ const lerp = (a, b, t) => a * (1 - t) + b * t;
     dot.style.transform = 'translate(-50%,-50%) scale(1)';
   });
 
-  // Hover detection
+  // Hover checks
   document.addEventListener('mouseover', e => {
     const el = e.target.closest('a, button, [role="tab"], .product-card, .gm-item, .bopt, .mcat');
     if (el) {
@@ -159,44 +363,21 @@ const lerp = (a, b, t) => a * (1 - t) + b * t;
       loader.style.display = 'none';
       document.body.classList.remove('loading');
 
-      // Trigger hero text animations
-      const heroHead = $('#heroHeadline');
-      if (heroHead) heroHead.classList.add('revealed');
+      // Init scrolling card stacking system
+      fps = new CardStackingScroll();
 
       spawnDriftingParticles();
-      initRevealObserver();
-      initStatsObserver();
     }, 1100);
   }
 })();
 
-/* ─── Scroll Progress Bar ────────────────────── */
+/* ─── Scroll Progress Bar Indicator ──────────────── */
 window.addEventListener('scroll', () => {
   const bar = $('#scroll-progress');
   if (!bar) return;
   const pct = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight);
   bar.style.transform = `scaleX(${Math.max(0, Math.min(pct, 1))})`;
-
-  // Navbar scrolled class toggle
-  const navbar = $('#navbar');
-  if (navbar) {
-    navbar.classList.toggle('scrolled', window.scrollY > 50);
-  }
 }, { passive: true });
-
-/* ─── Reveal Observer ────────────────────────────── */
-function initRevealObserver() {
-  const els = $$('.reveal');
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        e.target.classList.add('visible');
-        io.unobserve(e.target);
-      }
-    });
-  }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
-  els.forEach(el => io.observe(el));
-}
 
 /* ─── Stats Count-Up Animation ───────────────────── */
 function animateStats() {
@@ -219,87 +400,8 @@ function animateStats() {
   });
 }
 
-function initStatsObserver() {
-  const statsRow = $('#storyStatsRow');
-  if (!statsRow) return;
-  const io = new IntersectionObserver(([entry]) => {
-    if (entry.isIntersecting) {
-      animateStats();
-      io.disconnect();
-    }
-  }, { threshold: 0.2 });
-  io.observe(statsRow);
-}
-
-/* ─── Hero Signature Cakes Showcase ────────────── */
-function initHeroShowcase() {
-  const slider = $('#heroShowcaseSlider');
-  const prevBtn = $('#heroShowcasePrev');
-  const nextBtn = $('#heroShowcaseNext');
-  const idxDisp = $('#heroShowcaseIdx');
-
-  if (!slider) return;
-
-  // Build the slides markup
-  slider.innerHTML = SIGNATURE_CAKES.map((cake, i) => `
-    <div class="showcase-slide${i === 0 ? ' active' : ''}" data-idx="${i}">
-      <div class="slide-visual">
-        <img src="${cake.img}" alt="${cake.name}" loading="lazy" />
-      </div>
-      <div class="slide-details">
-        <span class="slide-tag">${cake.tag}</span>
-        <h3 class="slide-title">${cake.name}</h3>
-        <p class="slide-desc">${cake.desc}</p>
-        <div class="slide-price">${formatINR(cake.price)}</div>
-      </div>
-    </div>
-  `).join('');
-
-  function renderSlide(idx) {
-    state.currentHeroShowcase = idx;
-    $$('.showcase-slide', slider).forEach(slide => {
-      slide.classList.toggle('active', parseInt(slide.dataset.idx) === idx);
-    });
-    if (idxDisp) {
-      idxDisp.textContent = `${idx + 1} / ${SIGNATURE_CAKES.length}`;
-    }
-  }
-
-  prevBtn.addEventListener('click', () => {
-    let prev = state.currentHeroShowcase - 1;
-    if (prev < 0) prev = SIGNATURE_CAKES.length - 1;
-    renderSlide(prev);
-  });
-
-  nextBtn.addEventListener('click', () => {
-    let next = state.currentHeroShowcase + 1;
-    if (next >= SIGNATURE_CAKES.length) next = 0;
-    renderSlide(next);
-  });
-
-  // Automated gentle rotation every 8 seconds
-  setInterval(() => {
-    let next = state.currentHeroShowcase + 1;
-    if (next >= SIGNATURE_CAKES.length) next = 0;
-    renderSlide(next);
-  }, 8000);
-}
-
-/* ─── Hero Countdown Timer & Announcement ────────── */
-(function initTicker() {
-  const ticker = $('#tickerTrack');
-  if (!ticker) return;
-  const items = [
-    'Handcrafted Daily 🥐', 'Paris-Inspired Patisserie', 'Daily Batch Fresh By 7 AM ⏰',
-    'Times Food Award Winner 🏆', 'Every Dessert Tells A Story', 'Premium Cocoa Sourced From Ghana 🍫',
-    'Handcrafted Daily 🥐', 'Paris-Inspired Patisserie', 'Daily Batch Fresh By 7 AM ⏰',
-    'Times Food Award Winner 🏆', 'Every Dessert Tells A Story', 'Premium Cocoa Sourced From Ghana 🍫'
-  ];
-  ticker.innerHTML = items.map(item => `<span>${item}</span>`).join('');
-})();
-
-/* ─── Menu Categories Render ─────────────────────── */
-function renderProductCard(p) {
+/* ─── Product Card Generation ────────────────────── */
+function makeProductCard(p) {
   const isFav = state.favorites.has(p.id);
   const badgeHTML = p.badges.map(b => `<span class="badge badge-${b}">${b}</span>`).join('');
   const priceHTML = p.oldPrice
@@ -358,7 +460,7 @@ function renderMenuGrid() {
     filtered = [...filtered].sort((a, b) => b.rating - a.rating);
   }
 
-  grid.innerHTML = filtered.map(p => renderProductCard(p)).join('');
+  grid.innerHTML = filtered.map(p => makeProductCard(p)).join('');
 }
 
 /* Category Filter Button Listeners */
@@ -413,12 +515,12 @@ function initCakeBuilder() {
       if (isOpen) {
         drawer.classList.remove('open');
         drawer.setAttribute('aria-hidden', 'true');
-        toggleBtn.textContent = 'Open Cake Atelier Builder ↓';
+        toggleBtn.textContent = 'Open Custom Cake Atelier ↓';
       } else {
         drawer.classList.add('open');
         drawer.setAttribute('aria-hidden', 'false');
-        toggleBtn.textContent = 'Collapse Cake Atelier Builder ↑';
-        // Scroll smoothly to builder top
+        toggleBtn.textContent = 'Collapse Custom Cake Atelier ↑';
+        // Scroll smoothly inside section
         setTimeout(() => {
           drawer.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }, 300);
@@ -826,7 +928,7 @@ function spawnDriftingParticles() {
   loop();
 }
 
-/* ─── Mobile Menu Accordions ──────────────────────── */
+/* ─── Mobile Menu ────────────────────────────────── */
 (function initMobileMenu() {
   const burger = $('#hamburger');
   const menu = $('#mobile-menu');
@@ -845,26 +947,26 @@ function spawnDriftingParticles() {
 
 /* ─── Hero Mouse Parallax ────────────────────────── */
 (function initMouseParallax() {
-  const hero = $('#hero');
-  if (!hero) return;
+  const pages = $$('.pg');
+  pages.forEach(page => {
+    page.addEventListener('mousemove', e => {
+      const floaters = $$('.floater', page);
+      const cx = window.innerWidth / 2;
+      const cy = window.innerHeight / 2;
+      const dx = (e.clientX - cx) / cx;
+      const dy = (e.clientY - cy) / cy;
 
-  hero.addEventListener('mousemove', e => {
-    const floaters = $$('.floater', hero);
-    const cx = window.innerWidth / 2;
-    const cy = window.innerHeight / 2;
-    const dx = (e.clientX - cx) / cx;
-    const dy = (e.clientY - cy) / cy;
-
-    floaters.forEach((f, i) => {
-      const depth = (i + 1) * 8;
-      f.style.transform = `translate(${dx * depth}px, ${dy * depth}px)`;
+      floaters.forEach((f, i) => {
+        const depth = (i + 1) * 8;
+        f.style.transform = `translate(${dx * depth}px, ${dy * depth}px)`;
+      });
     });
   });
 })();
 
 /* ─── Magnetic Spring Physics on Buttons ─────────── */
 (function initMagneticButtons() {
-  const btns = $$('.hero-btn-primary, .btn-checkout, .btn-reserve-cake, .cc-banner-btn');
+  const btns = $$('.hero-btn-primary, .btn-checkout, .btn-reserve-cake, .btn-open-atelier');
   btns.forEach(btn => {
     btn.addEventListener('mousemove', e => {
       const rect = btn.getBoundingClientRect();
@@ -881,7 +983,7 @@ function spawnDriftingParticles() {
 
 /* ─── Material Button Ripple ─────────────────────── */
 document.addEventListener('click', e => {
-  const btn = e.target.closest('.hero-btn-primary, .btn-checkout, .btn-reserve-cake, .cc-banner-btn');
+  const btn = e.target.closest('.hero-btn-primary, .btn-checkout, .btn-reserve-cake, .btn-open-atelier');
   if (!btn) return;
 
   const rect = btn.getBoundingClientRect();
@@ -894,7 +996,6 @@ document.addEventListener('click', e => {
   circle.style.top = `${e.clientY - rect.top - radius}px`;
   circle.classList.add('ripple');
 
-  // Remove existing ripples
   const ripple = btn.querySelector('.ripple');
   if (ripple) ripple.remove();
 
@@ -921,7 +1022,6 @@ document.addEventListener('keydown', e => {
 /* ─── Init on Page Load ──────────────────────────── */
 document.addEventListener('DOMContentLoaded', () => {
   renderMenuGrid();
-  initHeroShowcase();
   initCakeBuilder();
   renderTestimonials();
   initFAQ();

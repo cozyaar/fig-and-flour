@@ -31,16 +31,16 @@
 <!-- ── Navigation Header ──────────────────────── -->
 <header id="siteHeader">
   <nav id="navbar" role="navigation" aria-label="Main Navigation">
-    <a href="#hero" class="nav-logo" aria-label="Fig & Flour Home">
+    <a href="javascript:fps&&fps.goTo(0)" class="nav-logo" aria-label="Fig & Flour Home">
       <span class="nav-logo-main">Fig &amp; Flour</span>
       <span class="nav-logo-sub">Artisan Patisserie · Est. 1998</span>
     </a>
     <ul class="nav-links" role="list">
-      <li><a href="#hero" class="nav-link">Home</a></li>
-      <li><a href="#menu" class="nav-link">Menu</a></li>
-      <li><a href="#story" class="nav-link">Our Story</a></li>
-      <li><a href="#chefs" class="nav-link">Chefs</a></li>
-      <li><a href="#visit" class="nav-link">Visit Us</a></li>
+      <li><a class="nav-link" onclick="fps&&fps.goTo(0)">Home</a></li>
+      <li><a class="nav-link" onclick="fps&&fps.goTo(3)">Menu</a></li>
+      <li><a class="nav-link" onclick="fps&&fps.goTo(4)">Our Story</a></li>
+      <li><a class="nav-link" onclick="fps&&fps.goTo(5)">Chefs</a></li>
+      <li><a class="nav-link" onclick="fps&&fps.goTo(6)">Visit Us</a></li>
     </ul>
     <div class="nav-actions">
       <button class="btn-dark-toggle" id="darkToggle" aria-label="Toggle dark mode">🌙</button>
@@ -58,196 +58,243 @@
 <!-- ── Mobile Menu Overlay ────────────────────── -->
 <div id="mobile-menu" role="navigation" aria-label="Mobile Navigation">
   <button class="mobile-menu-close" id="mobileMenuClose" aria-label="Close menu">✕</button>
-  <a href="#hero" class="mobile-link" onclick="closeMobileMenu()">Home</a>
-  <a href="#menu" class="mobile-link" onclick="closeMobileMenu()">Menu</a>
-  <a href="#story" class="mobile-link" onclick="closeMobileMenu()">Our Story</a>
-  <a href="#chefs" class="mobile-link" onclick="closeMobileMenu()">Our Chefs</a>
-  <a href="#visit" class="mobile-link" onclick="closeMobileMenu()">Visit Us</a>
+  <a class="mobile-link" onclick="fps&&fps.goTo(0);closeMobileMenu()">Home</a>
+  <a class="mobile-link" onclick="fps&&fps.goTo(3);closeMobileMenu()">Menu</a>
+  <a class="mobile-link" onclick="fps&&fps.goTo(4);closeMobileMenu()">Our Story</a>
+  <a class="mobile-link" onclick="fps&&fps.goTo(5);closeMobileMenu()">Our Chefs</a>
+  <a class="mobile-link" onclick="fps&&fps.goTo(6);closeMobileMenu()">Visit Us</a>
 </div>
 
 <!-- ══════════════════════════════════════════════
-     MAIN CONTENT (NATURAL SCROLL LAYOUT)
+     FULL-PAGE CONTROLLER WRAPPER
 ═══════════════════════════════════════════════ -->
-<main id="main-content">
+<div id="fullpage">
 
-  <!-- ── SECTION 1: HERO & SLIDE SHOW ─────────── -->
-  <section id="hero" aria-label="Hero and Featured Creations">
-    <!-- Drifting background elements -->
-    <div class="hero-floaters" aria-hidden="true" id="heroFloaters">
-      <span class="floater" style="left:8%;top:18%;--dur:8s;--delay:0s">🥐</span>
-      <span class="floater" style="left:82%;top:22%;--dur:10s;--delay:2s">🎂</span>
-      <span class="floater" style="left:72%;top:58%;--dur:7s;--delay:1s">🍰</span>
-      <span class="floater" style="left:13%;top:65%;--dur:9s;--delay:3s">☕</span>
+  <!-- ── PAGE 0: HERO / SIGNATURE CAKE 1 ──────── -->
+  <section class="pg pg-dark" id="pg-0" data-label="Signature I">
+    <div class="hero-bg">
+      <img src="hero_bakery.jpg" alt="Fig & Flour Patisserie" loading="eager" fetchpriority="high" />
+      <div class="hero-overlay"></div>
+      <div class="hero-grain"></div>
     </div>
-
+    
     <div class="hero-year-bg" aria-hidden="true">1998</div>
 
-    <!-- Editorial Hero Layout -->
-    <div class="hero-container">
-      <div class="hero-text-panel">
-        <p class="hero-label">Artisan Patisserie · Mumbai's Finest</p>
-        <h1 class="hero-headline" id="heroHeadline">
-          <span class="line">Crafted with</span>
-          <span class="line"><em>Love &amp;</em></span>
-          <span class="line">Flour</span>
-        </h1>
-        <p class="hero-sub">From our kitchen to your table — every pastry, cake, and croissant is made by hand with the finest seasonal ingredients. Because every dessert tells a story.</p>
-        <div class="hero-cta-row">
-          <a href="#menu" class="hero-btn-primary">Order Now <span class="btn-arrow">→</span></a>
-          <a href="#story" class="hero-btn-ghost">Our Legacy</a>
+    <div class="hero-floaters" aria-hidden="true">
+      <span class="floater" style="left:8%;top:20%;--dur:8s;--delay:0s">🥐</span>
+      <span class="floater" style="left:80%;top:18%;--dur:10s;--delay:2s">🎂</span>
+    </div>
+
+    <!-- Editorial Stacking Content -->
+    <div class="cake-hero-layout">
+      <div class="cake-hero-details">
+        <p class="cake-hero-tag pg-anim-item">Featured Creation · 01</p>
+        <h1 class="cake-hero-title pg-anim-item" style="--delay:0.1s">Signature<br><em>Pistachio Rose</em></h1>
+        <p class="cake-hero-desc pg-anim-item" style="--delay:0.2s">Persian pistachio flour sponge, layered with organic rose water syrup, crushed cardamom cream, and hand-decorated sugar petals.</p>
+        <div class="cake-hero-meta pg-anim-item" style="--delay:0.3s">
+          <span class="cake-hero-price">₹2,199</span>
+          <button class="cake-hero-buy-btn" onclick="addToCart(11)">Add to Cart</button>
         </div>
       </div>
-
-      <!-- Hero Interactive Carousel (Slides through signature cake photos & details) -->
-      <div class="hero-showcase-panel">
-        <div class="showcase-slider" id="heroShowcaseSlider">
-          <!-- Dynamically filled by JS with signature cake photos + details -->
-        </div>
-        <div class="showcase-nav">
-          <button class="showcase-arrow" id="heroShowcasePrev" aria-label="Previous Creation">←</button>
-          <span class="showcase-idx" id="heroShowcaseIdx">1 / 3</span>
-          <button class="showcase-arrow" id="heroShowcaseNext" aria-label="Next Creation">→</button>
+      <div class="cake-hero-visual pg-anim-item" style="--delay:0.15s">
+        <div class="visual-wrap">
+          <img src="product_cake.jpg" alt="Signature Pistachio Rose Cake" loading="lazy" />
         </div>
       </div>
     </div>
 
-    <!-- Decorative Bottom Announcement Ticker -->
-    <div class="hero-bottom-ticker">
-      <div class="ticker-track" id="tickerTrack">
-        <!-- Injected by JS -->
+    <!-- Bottom Ticker Strip -->
+    <div class="hero-bottom-ticker" aria-hidden="true">
+      <div class="ticker-track">
+        <span>Handcrafted Daily 🥐 · Paris-Inspired Patisserie · Daily Batch Fresh By 7 AM ⏰ · Times Food Award Winner 🏆 · Every Dessert Tells A Story</span>
       </div>
+    </div>
+
+    <!-- Scroll hint -->
+    <div class="pg-scroll-hint" aria-hidden="true">
+      <div class="scroll-hint-line"></div>
+      <span>Scroll to Explore</span>
     </div>
   </section>
 
-  <!-- ── SECTION 2: LIVE MENU & BUILDER ───────── -->
-  <section id="menu" class="section-cream" aria-label="Live Menu">
-    <div class="menu-intro reveal">
-      <span class="section-label">Live Menu</span>
-      <h2 class="section-title text-dark">Explore the <em>Collection</em></h2>
-      <p class="section-sub text-dark">Every item is prepared from scratch each morning. Select a category below or search for your favorite treats.</p>
+  <!-- ── PAGE 1: HERO / SIGNATURE CAKE 2 ──────── -->
+  <section class="pg pg-dark" id="pg-1" data-label="Signature II">
+    <div class="hero-bg">
+      <img src="hero_bakery.jpg" alt="Fig & Flour Patisserie" loading="lazy" />
+      <div class="hero-overlay"></div>
+      <div class="hero-grain"></div>
     </div>
 
-    <!-- Search & Sort Rails -->
-    <div class="menu-controls reveal">
-      <div class="menu-search-wrap">
-        <span class="search-icon" aria-hidden="true">🔍</span>
-        <input type="search" id="menuSearch" placeholder="Search croissants, cakes, coffee..." aria-label="Search menu" />
-      </div>
-      <div class="menu-sort-wrap">
-        <select id="menuSort" aria-label="Sort products">
-          <option value="default">Sort: Featured</option>
-          <option value="price-asc">Price: Low → High</option>
-          <option value="price-desc">Price: High → Low</option>
-          <option value="rating">Top Rated</option>
-        </select>
-      </div>
-    </div>
+    <div class="hero-year-bg" aria-hidden="true">ROSE</div>
 
-    <!-- Category Buttons -->
-    <div class="menu-cat-rail reveal" role="tablist" aria-label="Menu categories">
-      <button class="mcat active" data-mf="all" role="tab" aria-selected="true">All Items</button>
-      <button class="mcat" data-mf="cakes" role="tab">Cakes</button>
-      <button class="mcat" data-mf="pastries" role="tab">Pastries</button>
-      <button class="mcat" data-mf="macarons" role="tab">Macarons</button>
-      <button class="mcat" data-mf="cheesecakes" role="tab">Cheesecakes</button>
-      <button class="mcat" data-mf="cookies" role="tab">Cookies</button>
-      <button class="mcat" data-mf="tarts" role="tab">Tarts</button>
-      <button class="mcat" data-mf="coffee" role="tab">Artisan Coffee</button>
-    </div>
-
-    <!-- Integrated Custom Cake Atelier Option Banner -->
-    <div class="custom-cake-banner reveal" id="customCakeBanner">
-      <div class="cc-banner-content">
-        <span class="cc-banner-tag">🍰 Atelier Special</span>
-        <h3>Design Your Own Celebration Cake</h3>
-        <p>Choose shape, layers, premium flavours, buttercream finish, and hand-decorated toppings. Sized exactly to your guest count.</p>
-        <button class="cc-banner-btn" id="toggleAtelierBtn">Open Cake Atelier Builder ↓</button>
-      </div>
-      <div class="cc-banner-visual">
-        <img src="product_cake.jpg" alt="Luxury Custom Birthday Cake" loading="lazy" />
-      </div>
-    </div>
-
-    <!-- Integrated Custom Cake Builder Panel (Collapsible) -->
-    <div class="atelier-drawer" id="atelierDrawer" aria-hidden="true">
-      <div class="builder-wrapper">
-        <!-- Preview Panel -->
-        <div class="builder-preview">
-          <span class="builder-side-label">Visualizing Your Creation</span>
-          <div class="cake-spin-wrap">
-            <img class="cake-spin-img" id="cakePreviewImg" src="product_cake.jpg" alt="Custom cake preview" loading="lazy" />
-            <div class="cake-spin-ring" aria-hidden="true"></div>
-          </div>
-          <div class="cake-price-display" id="cakePriceDisplay">₹1,299</div>
-          <p class="cake-price-note">Estimated Price · Incl. GST</p>
+    <div class="cake-hero-layout cake-hero-layout--reverse">
+      <div class="cake-hero-visual pg-anim-item">
+        <div class="visual-wrap">
+          <img src="product_cake.jpg" alt="Madagascar Vanilla Drip Cake" loading="lazy" />
         </div>
-
-        <!-- Configuration Panel -->
-        <div class="builder-form">
-          <h4>Custom Cake <em>Atelier</em></h4>
-          <p class="builder-intro">Handcrafted to order. Minimum 24–48 hours notice required for all custom orders.</p>
-
-          <div class="builder-group">
-            <span class="builder-group-label">1. Select Shape</span>
-            <div class="builder-options" id="shapeOptions">
-              <button class="bopt selected" data-price="0" data-key="shape">Round</button>
-              <button class="bopt" data-price="150" data-key="shape">Square</button>
-              <button class="bopt" data-price="200" data-key="shape">Heart Shape</button>
-              <button class="bopt" data-price="350" data-key="shape">2-Tiered</button>
-            </div>
-          </div>
-
-          <div class="builder-group">
-            <span class="builder-group-label">2. Select Flavour</span>
-            <div class="builder-options" id="flavourOptions">
-              <button class="bopt selected" data-price="0" data-key="flavour">Vanilla Bean</button>
-              <button class="bopt" data-price="100" data-key="flavour">Dark Chocolate</button>
-              <button class="bopt" data-price="150" data-key="flavour">Red Velvet</button>
-              <button class="bopt" data-price="200" data-key="flavour">Lemon Blueberry</button>
-              <button class="bopt" data-price="250" data-key="flavour">Pistachio Rose</button>
-            </div>
-          </div>
-
-          <div class="builder-group">
-            <span class="builder-group-label">3. Select Cream Finish</span>
-            <div class="builder-options" id="creamOptions">
-              <button class="bopt selected" data-price="0" data-key="cream">Buttercream</button>
-              <button class="bopt" data-price="120" data-key="cream">Dark Ganache</button>
-              <button class="bopt" data-price="150" data-key="cream">Swiss Meringue</button>
-              <button class="bopt" data-price="220" data-key="cream">Mirror Glaze</button>
-            </div>
-          </div>
-
-          <div class="builder-group">
-            <span class="builder-group-label">4. Select Premium Toppings</span>
-            <div class="builder-options" id="toppingOptions">
-              <button class="bopt selected" data-price="0" data-key="topping">Fresh Berries</button>
-              <button class="bopt" data-price="150" data-key="topping">Edible Gold Leaf</button>
-              <button class="bopt" data-price="100" data-key="topping">Sugar Flowers</button>
-              <button class="bopt" data-price="200" data-key="topping">Macaron Stack</button>
-            </div>
-          </div>
-
-          <div class="builder-group">
-            <span class="builder-group-label">5. Cake Size / Weight — <strong id="weightLabel">1.0 kg</strong></span>
-            <input type="range" class="weight-slider" id="weightSlider" min="0.5" max="5.0" step="0.5" value="1.0" aria-label="Cake weight in kilograms" />
-          </div>
-
-          <button class="btn-reserve-cake" id="orderCakeBtn">
-            Reserve Your Creation <span class="btn-arrow">→</span>
-          </button>
+      </div>
+      <div class="cake-hero-details">
+        <p class="cake-hero-tag pg-anim-item">Featured Creation · 02</p>
+        <h1 class="cake-hero-title pg-anim-item" style="--delay:0.1s">Madagascar<br><em>Vanilla Drip</em></h1>
+        <p class="cake-hero-desc pg-anim-item" style="--delay:0.2s">Three layers of light vanilla bean sponge, house-cooked wild raspberry compote filling, and whipped vanilla Swiss meringue buttercream.</p>
+        <div class="cake-hero-meta pg-anim-item" style="--delay:0.3s">
+          <span class="cake-hero-price">₹1,899</span>
+          <button class="cake-hero-buy-btn" onclick="addToCart(1)">Add to Cart</button>
         </div>
       </div>
     </div>
 
-    <!-- Product Grid for Menu Items -->
-    <div class="products-grid reveal" id="menuGrid" role="list"></div>
+    <div class="pg-scroll-hint" aria-hidden="true">
+      <div class="scroll-hint-line"></div>
+      <span>Scroll</span>
+    </div>
   </section>
 
-  <!-- ── SECTION 3: OUR STORY & THE LEGACY ────── -->
-  <section id="story" class="section-dark" aria-label="Our Story">
-    <div class="story-container">
-      <div class="story-visual-side reveal">
+  <!-- ── PAGE 2: HERO / SIGNATURE CAKE 3 ──────── -->
+  <section class="pg pg-dark" id="pg-2" data-label="Signature III">
+    <div class="hero-bg">
+      <img src="hero_bakery.jpg" alt="Fig & Flour Patisserie" loading="lazy" />
+      <div class="hero-overlay"></div>
+      <div class="hero-grain"></div>
+    </div>
+
+    <div class="hero-year-bg" aria-hidden="true">GOLD</div>
+
+    <div class="cake-hero-layout">
+      <div class="cake-hero-details">
+        <p class="cake-hero-tag pg-anim-item">Featured Creation · 03</p>
+        <h1 class="cake-hero-title pg-anim-item" style="--delay:0.1s">Gold Flake<br><em>Dark Chocolate</em></h1>
+        <p class="cake-hero-desc pg-anim-item" style="--delay:0.2s">Rich 72% Valrhona single-origin dark chocolate cake, salted chocolate ganache layers, decorated with pure edible 24k gold leaf.</p>
+        <div class="cake-hero-meta pg-anim-item" style="--delay:0.3s">
+          <span class="cake-hero-price">₹2,499</span>
+          <button class="cake-hero-buy-btn" onclick="addToCart(7)">Add to Cart</button>
+        </div>
+      </div>
+      <div class="cake-hero-visual pg-anim-item" style="--delay:0.15s">
+        <div class="visual-wrap">
+          <img src="product_cake.jpg" alt="Gold Flake Dark Chocolate Cake" loading="lazy" />
+        </div>
+      </div>
+    </div>
+
+    <div class="pg-scroll-hint" aria-hidden="true">
+      <div class="scroll-hint-line"></div>
+      <span>Scroll to Menu</span>
+    </div>
+  </section>
+
+  <!-- ── PAGE 3: THE LIVE MENU (SCROLLABLE) ───── -->
+  <section class="pg pg-cream pg--scroll" id="pg-3" data-label="Collection">
+    <div class="menu-page-container">
+      <div class="menu-page-header">
+        <div>
+          <span class="pg-label">Live Menu</span>
+          <h2 class="pg-title pg-title--dark">Explore the <em>Collection</em></h2>
+        </div>
+        <div class="menu-search-wrap">
+          <input type="search" id="menuSearch" placeholder="Search menu..." aria-label="Search" />
+          <select id="menuSort" aria-label="Sort">
+            <option value="default">Sort: Featured</option>
+            <option value="price-asc">Price ↑</option>
+            <option value="price-desc">Price ↓</option>
+            <option value="rating">Top Rated</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="menu-cat-rail">
+        <button class="mcat active" data-mf="all">All Items</button>
+        <button class="mcat" data-mf="cakes">Cakes</button>
+        <button class="mcat" data-mf="pastries">Pastries</button>
+        <button class="mcat" data-mf="macarons">Macarons</button>
+        <button class="mcat" data-mf="cheesecakes">Cheesecakes</button>
+        <button class="mcat" data-mf="cookies">Cookies</button>
+        <button class="mcat" data-mf="tarts">Tarts</button>
+        <button class="mcat" data-mf="coffee">Artisan Coffee</button>
+      </div>
+
+      <!-- Integrated Custom Cake Atelier Trigger Card -->
+      <div class="custom-cake-card">
+        <div class="ccc-details">
+          <span class="badge badge-special">ATELIER SPECIAL</span>
+          <h3>Design Your Own Custom Celebration Cake</h3>
+          <p>Choose shape, custom premium flavours, Swiss meringue icing, and hand-decorated toppings. Sized exactly to your guest count.</p>
+          <button class="btn-open-atelier" id="toggleAtelierBtn">Open Custom Cake Atelier ↓</button>
+        </div>
+        <div class="ccc-visual">
+          <img src="product_cake.jpg" alt="Custom cake builder option" loading="lazy" />
+        </div>
+      </div>
+
+      <!-- Collapsible Atelier Panel -->
+      <div class="atelier-drawer" id="atelierDrawer" aria-hidden="true">
+        <div class="builder-wrapper">
+          <div class="builder-preview">
+            <span class="builder-preview-label">Visualizing Your Creation</span>
+            <div class="cake-spin-wrap">
+              <img class="cake-spin-img" id="cakePreviewImg" src="product_cake.jpg" alt="Custom cake preview" loading="lazy" />
+              <div class="cake-spin-ring" aria-hidden="true"></div>
+            </div>
+            <div class="cake-price-display" id="cakePriceDisplay">₹1,299</div>
+            <p class="cake-price-note">Estimated price · GST incl.</p>
+          </div>
+          <div class="builder-form">
+            <h4>Custom Cake <em>Atelier</em></h4>
+            <p class="builder-intro">Handcrafted to order. Minimum 24–48 hours notice required for all custom orders.</p>
+            <div class="builder-group">
+              <span class="builder-group-label">1. Shape</span>
+              <div class="builder-options" id="shapeOptions">
+                <button class="bopt selected" data-price="0" data-key="shape">Round</button>
+                <button class="bopt" data-price="150" data-key="shape">Square</button>
+                <button class="bopt" data-price="200" data-key="shape">Heart Shape</button>
+                <button class="bopt" data-price="350" data-key="shape">2-Tiered</button>
+              </div>
+            </div>
+            <div class="builder-group">
+              <span class="builder-group-label">2. Flavour</span>
+              <div class="builder-options" id="flavourOptions">
+                <button class="bopt selected" data-price="0" data-key="flavour">Vanilla Bean</button>
+                <button class="bopt" data-price="100" data-key="flavour">Dark Chocolate</button>
+                <button class="bopt" data-price="150" data-key="flavour">Red Velvet</button>
+                <button class="bopt" data-price="200" data-key="flavour">Lemon Blueberry</button>
+                <button class="bopt" data-price="250" data-key="flavour">Pistachio Rose</button>
+              </div>
+            </div>
+            <div class="builder-group">
+              <span class="builder-group-label">3. Cream Finish</span>
+              <div class="builder-options" id="creamOptions">
+                <button class="bopt selected" data-price="0" data-key="cream">Buttercream</button>
+                <button class="bopt" data-price="120" data-key="cream">Dark Ganache</button>
+                <button class="bopt" data-price="150" data-key="cream">Swiss Meringue</button>
+                <button class="bopt" data-price="220" data-key="cream">Mirror Glaze</button>
+              </div>
+            </div>
+            <div class="builder-group">
+              <span class="builder-group-label">4. Premium Toppings</span>
+              <div class="builder-options" id="toppingOptions">
+                <button class="bopt selected" data-price="0" data-key="topping">Fresh Berries</button>
+                <button class="bopt" data-price="150" data-key="topping">Edible Gold Leaf</button>
+                <button class="bopt" data-price="100" data-key="topping">Sugar Flowers</button>
+                <button class="bopt" data-price="200" data-key="topping">Macaron Stack</button>
+              </div>
+            </div>
+            <div class="builder-group">
+              <span class="builder-group-label">5. Weight — <strong id="weightLabel">1.0 kg</strong></span>
+              <input type="range" class="weight-slider" id="weightSlider" min="0.5" max="5.0" step="0.5" value="1.0" aria-label="Cake weight in kilograms" />
+            </div>
+            <button class="btn-reserve-cake" id="orderCakeBtn">Reserve Your Creation <span class="btn-arrow">→</span></button>
+          </div>
+        </div>
+      </div>
+
+      <div class="products-grid" id="menuGrid" role="list"></div>
+    </div>
+  </section>
+
+  <!-- ── PAGE 4: OUR STORY & LEGACY ───────────── -->
+  <section class="pg pg-dark" id="pg-4" data-label="Story">
+    <div class="story-page-container">
+      <div class="story-visual-side pg-anim-item">
         <img src="bakery_interior.jpg" alt="Fig & Flour flagship Bandra interior" loading="lazy" />
         <div class="story-visual-overlay"></div>
         <div class="story-accent-visual">
@@ -257,103 +304,103 @@
       </div>
 
       <div class="story-text-side">
-        <span class="section-label">Our Story</span>
-        <h2 class="section-title text-light">A Legacy of <em>Sweetness</em></h2>
-        <p class="story-p reveal">Founded in 1998 by Chef Priya Nair on the cobbled lanes of Bandra, Fig & Flour began as a tiny kitchen with a big dream — to bring the art of authentic French patisserie to Mumbai's discerning palate.</p>
-        <p class="story-p reveal">Today, with three locations across the city and a devoted following, we remain guided by our original promise: exceptional quality, local sourcing, and the belief that every dessert tells a story.</p>
+        <span class="pg-label pg-anim-item">Our Story</span>
+        <h2 class="pg-title pg-anim-item" style="color:var(--cream)">A Legacy of<br><em>Sweetness</em></h2>
+        <p class="story-p pg-anim-item" style="--delay:0.1s">Founded in 1998 by Chef Priya Nair on the cobbled lanes of Bandra, Fig & Flour began as a tiny kitchen with a big dream — to bring the art of authentic French patisserie to Mumbai's discerning palate.</p>
+        <p class="story-p pg-anim-item" style="--delay:0.2s">Today, with three locations across the city, we remain guided by our original promise: exceptional quality, local sourcing, and the belief that every dessert tells a story.</p>
 
-        <!-- Count-Up stats integrated inline -->
-        <div class="story-stats-row" id="storyStatsRow">
-          <div class="story-stat reveal">
+        <!-- stats integrated inline -->
+        <div class="story-stats-row pg-anim-item" id="storyStatsRow" style="--delay:0.3s">
+          <div class="story-stat">
             <div class="stat-num" data-target="20000" data-suffix="K+">0</div>
             <div class="stat-lbl">Happy Guests</div>
           </div>
-          <div class="story-stat reveal" style="--delay:0.1s">
+          <div class="story-stat">
             <div class="stat-num" data-target="26" data-suffix=" Yrs">0</div>
             <div class="stat-lbl">of Excellence</div>
           </div>
-          <div class="story-stat reveal" style="--delay:0.2s">
+          <div class="story-stat">
             <div class="stat-num" data-target="47" data-suffix="+">0</div>
             <div class="stat-lbl">Signature Recipes</div>
           </div>
         </div>
 
-        <div class="story-timeline reveal">
-          <div class="timeline-step"><span>🌅 4 AM</span><p>Croissants Prepped</p></div>
+        <div class="story-timeline pg-anim-item" style="--delay:0.4s">
+          <div class="timeline-step"><span>🌙 4 AM</span><p>Prep</p></div>
           <div class="timeline-arrow">→</div>
-          <div class="timeline-step"><span>🔥 6 AM</span><p>Baking Commences</p></div>
+          <div class="timeline-step"><span>🔥 6 AM</span><p>Bake</p></div>
           <div class="timeline-arrow">→</div>
-          <div class="timeline-step"><span>🎨 8 AM</span><p>Hand Decoration</p></div>
+          <div class="timeline-step"><span>🎨 8 AM</span><p>Finish</p></div>
           <div class="timeline-arrow">→</div>
-          <div class="timeline-step"><span>✨ 9 AM</span><p>Doors Open</p></div>
+          <div class="timeline-step"><span>✨ 9 AM</span><p>Open</p></div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ── SECTION 4: MEET THE CHEFS & RECOGNITION ── -->
-  <section id="chefs" class="section-cream" aria-label="Our Master Bakers">
-    <div class="chefs-intro reveal">
-      <span class="section-label">Meet the Team</span>
-      <h2 class="section-title text-dark">The Artisans Behind<br><em>Every Single Bite</em></h2>
-      <p class="section-sub text-dark">Three visionary chefs, decades of combined experience, and an unyielding dedication to the craft of patisserie.</p>
-    </div>
+  <!-- ── PAGE 5: MASTER BAKERS & CHEFS ───────── -->
+  <section class="pg pg-cream" id="pg-5" data-label="Chefs">
+    <div class="chefs-page-container">
+      <div class="chefs-header pg-anim-item">
+        <span class="pg-label">Meet the Team</span>
+        <h2 class="pg-title pg-title--dark">The Artisans Behind<br><em>Every Single Bite</em></h2>
+      </div>
 
-    <div class="chefs-grid">
-      <!-- Chef 1 -->
-      <div class="chef-profile-card reveal">
-        <div class="chef-img-wrap">
-          <img src="chef_baking.jpg" alt="Chef Priya Nair, Founder" loading="lazy" />
-          <div class="chef-img-overlay"></div>
+      <div class="chefs-grid">
+        <!-- Chef 1 -->
+        <div class="chef-profile-card pg-anim-item" style="--delay:0.1s">
+          <div class="chef-img-wrap">
+            <img src="chef_baking.jpg" alt="Chef Priya Nair, Founder" loading="lazy" />
+            <div class="chef-img-overlay"></div>
+          </div>
+          <div class="chef-content">
+            <span class="chef-role">Founder · Head Pastry Chef</span>
+            <h3>Priya Nair</h3>
+            <p>Le Cordon Bleu Paris graduate with 26 years of artisan experience. Featured in Vogue India & Times Food Guide.</p>
+          </div>
         </div>
-        <div class="chef-content">
-          <span class="chef-role">Founder · Head Pastry Chef</span>
-          <h3>Priya Nair</h3>
-          <p>Le Cordon Bleu Paris graduate with 26 years of artisan experience. Featured in Vogue India & Times Food Guide.</p>
+        <!-- Chef 2 -->
+        <div class="chef-profile-card pg-anim-item" style="--delay:0.2s">
+          <div class="chef-img-wrap">
+            <img src="bakery_interior.jpg" alt="Chef Arjun Mehta, Cake Design" loading="lazy" />
+            <div class="chef-img-overlay"></div>
+          </div>
+          <div class="chef-content">
+            <span class="chef-role">Cake Design Specialist</span>
+            <h3>Arjun Mehta</h3>
+            <p>Trained under Pierre Hermé in Paris. Arjun's wedding cakes have graced celebrations from Mumbai to Monaco.</p>
+          </div>
+        </div>
+        <!-- Chef 3 -->
+        <div class="chef-profile-card pg-anim-item" style="--delay:0.3s">
+          <div class="chef-img-wrap">
+            <img src="hero_bakery.jpg" alt="Chef Ananya Roy, Chocolatier" loading="lazy" />
+            <div class="chef-img-overlay"></div>
+          </div>
+          <div class="chef-content">
+            <span class="chef-role">Chocolatier · Macaron Artist</span>
+            <h3>Ananya Roy</h3>
+            <p>ICC alumna. Ananya crafts over 30 unique macaron flavours, each a tiny work of edible art.</p>
+          </div>
         </div>
       </div>
-      <!-- Chef 2 -->
-      <div class="chef-profile-card reveal" style="--delay:0.15s">
-        <div class="chef-img-wrap">
-          <img src="bakery_interior.jpg" alt="Chef Arjun Mehta, Cake Design" loading="lazy" />
-          <div class="chef-img-overlay"></div>
-        </div>
-        <div class="chef-content">
-          <span class="chef-role">Cake Design Specialist</span>
-          <h3>Arjun Mehta</h3>
-          <p>Trained under Pierre Hermé in Paris. Arjun's wedding cakes have graced celebrations from Mumbai to Monaco.</p>
-        </div>
-      </div>
-      <!-- Chef 3 -->
-      <div class="chef-profile-card reveal" style="--delay:0.3s">
-        <div class="chef-img-wrap">
-          <img src="hero_bakery.jpg" alt="Chef Ananya Roy, Chocolatier" loading="lazy" />
-          <div class="chef-img-overlay"></div>
-        </div>
-        <div class="chef-content">
-          <span class="chef-role">Chocolatier · Macaron Artist</span>
-          <h3>Ananya Roy</h3>
-          <p>ICC alumna. Ananya crafts over 30 unique macaron flavours, each a tiny work of edible art.</p>
-        </div>
-      </div>
-    </div>
 
-    <!-- Awards Ribbon -->
-    <div class="awards-ribbon reveal">
-      <div class="award-pill">🏆 Times Food: Best Patisserie 2024</div>
-      <div class="award-pill">⭐ India's Top Bakery 2023</div>
-      <div class="award-pill">🎖️ Culinary Excellence Award</div>
-      <div class="award-pill">🥇 Bridal Asia: Best Custom Cakes</div>
+      <!-- Awards ribbon -->
+      <div class="awards-ribbon pg-anim-item" style="--delay:0.4s">
+        <div class="award-pill">🏆 Times Food: Best Patisserie 2024</div>
+        <div class="award-pill">⭐ India's Top Bakery 2023</div>
+        <div class="award-pill">🎖️ Culinary Excellence Award</div>
+        <div class="award-pill">🥇 Bridal Asia: Best Custom Cakes</div>
+      </div>
     </div>
   </section>
 
-  <!-- ── SECTION 5: VISIT US & GUEST LOVE ────── -->
-  <section id="visit" class="section-dark" aria-label="Visit and Testimonials">
-    <div class="visit-container">
-      <!-- Left side: opening hours and address -->
-      <div class="visit-details-panel reveal">
-        <span class="section-label">Find Us</span>
-        <h2 class="section-title text-light">Visit Our<br><em>Flagship Patisseries</em></h2>
+  <!-- ── PAGE 6: VISIT US & TESTIMONIALS ────── -->
+  <section class="pg pg-dark" id="pg-6" data-label="Visit">
+    <div class="visit-page-container">
+      <div class="visit-details-panel pg-anim-item">
+        <span class="pg-label">Find Us</span>
+        <h2 class="pg-title" style="color:var(--cream)">Visit Our<br><em>Flagship Patisseries</em></h2>
 
         <div class="hours-container">
           <table class="hours-table" aria-label="Flagship opening hours">
@@ -382,10 +429,9 @@
         </div>
       </div>
 
-      <!-- Right side: guest reviews and loyalty rewards -->
       <div class="reviews-loyalty-panel">
         <!-- Testimonial Slider -->
-        <div class="testimonial-module reveal">
+        <div class="testimonial-module pg-anim-item" style="--delay:0.15s">
           <div class="testi-header">
             <span class="testi-tag">Guest Love</span>
             <div class="testi-nav">
@@ -399,10 +445,10 @@
           </div>
         </div>
 
-        <!-- Loyalty compact widget -->
-        <div class="loyalty-compact-card reveal">
+        <!-- Loyalty compact card -->
+        <div class="loyalty-compact-card pg-anim-item" style="--delay:0.3s">
           <span class="loyalty-tag">Loyalty Program</span>
-          <h4>Fig &amp; Flour Rewards</h4>
+          <h4 style="color:var(--cream)">Fig &amp; Flour Rewards</h4>
           <p>Every purchase earns petals 🌸. Unlock priority delivery, discount vouchers, and complimentary celebration cakes.</p>
           <div class="loyalty-rows">
             <div class="ly-row">🌿 <strong>Seedling Tier</strong><span>0–499 pts · Welcome treats</span></div>
@@ -414,14 +460,12 @@
     </div>
   </section>
 
-  <!-- ── SECTION 6: FAQ & NEWSLETTER ──────────── -->
-  <section id="faq" class="section-cream" aria-label="Frequently Asked Questions">
-    <div class="faq-container">
-      <div class="faq-accordion-side reveal">
-        <span class="section-label">FAQ</span>
-        <h2 class="section-title text-dark">Got a <em>Question?</em></h2>
-        <p class="section-sub text-dark" style="margin-bottom: 2rem;">Everything you need to know about ordering online and booking custom creations.</p>
-
+  <!-- ── PAGE 7: FAQ, NEWSLETTER & FOOTER (SCROLLABLE) ── -->
+  <section class="pg pg-cream pg--scroll" id="pg-7" data-label="Contact">
+    <div class="faq-footer-container">
+      <div class="faq-section">
+        <span class="pg-label">FAQ</span>
+        <h2 class="pg-title pg-title--dark">Got a <em>Question?</em></h2>
         <div class="faq-accordion-list" id="faqAccordion">
           <div class="faq-item">
             <button class="faq-q" aria-expanded="false"><span>Do you offer custom cake designs?</span><span class="faq-plus">+</span></button>
@@ -442,71 +486,89 @@
         </div>
       </div>
 
-      <!-- Newsletter subscription -->
-      <div class="newsletter-side reveal">
+      <div class="newsletter-section">
         <div class="newsletter-card">
-          <span class="section-label">Newsletter</span>
+          <span class="pg-label">Newsletter</span>
           <h4>Join Our <em>Sweet Circle</em></h4>
-          <p>Sign up to receive invitations to private pastry tastings, seasonal recipes from Chef Priya, and priority reservation access.</p>
+          <p>Sign up to receive invitations to private pastry tastings, seasonal recipes, and priority reservation access.</p>
           <form class="newsletter-form" id="newsletterForm" onsubmit="handleNewsletterSubmit(event)">
-            <input type="email" class="newsletter-input" placeholder="your@email.com" required aria-label="Email address" id="newsletterEmail" />
+            <input type="email" class="newsletter-input" placeholder="your@email.com" required id="newsletterEmail" />
             <button type="submit" class="newsletter-btn">Subscribe →</button>
           </form>
         </div>
       </div>
+
+      <!-- Real Footer inside this final page -->
+      <footer aria-label="Site footer">
+        <div class="footer-top">
+          <div class="footer-headline" aria-hidden="true">Fig &amp; Flour</div>
+          <div class="footer-grid">
+            <div class="footer-brand">
+              <span class="footer-brand-title">Fig &amp; Flour</span>
+              <span class="footer-brand-sub">Artisan Patisserie · Est. 1998</span>
+              <p class="footer-tagline">"Every dessert tells a story — and ours are baked with love, passion, and the finest ingredients from around the world."</p>
+              <div class="footer-socials">
+                <a href="#" class="fsocial" aria-label="Instagram">📷</a>
+                <a href="#" class="fsocial" aria-label="Facebook">📘</a>
+                <a href="#" class="fsocial" aria-label="Pinterest">📌</a>
+              </div>
+            </div>
+            <div class="footer-links-col">
+              <h4>Navigation</h4>
+              <ul>
+                <li><a onclick="fps&&fps.goTo(0)">Back to Top</a></li>
+                <li><a onclick="fps&&fps.goTo(3)">Live Menu</a></li>
+                <li><a onclick="fps&&fps.goTo(4)">Our Legacy</a></li>
+                <li><a onclick="fps&&fps.goTo(5)">Meet the Chefs</a></li>
+                <li><a onclick="fps&&fps.goTo(6)">Visit Us</a></li>
+              </ul>
+            </div>
+            <div class="footer-links-col">
+              <h4>Contact Desk</h4>
+              <ul>
+                <li><a href="tel:+912242424242">+91 22 4242 4242</a></li>
+                <li><a href="mailto:hello@figandflour.in">hello@figandflour.in</a></li>
+                <li><a href="https://wa.me/919876543210">WhatsApp Order Line</a></li>
+                <li><a onclick="fps&&fps.goTo(6)">Mumbai Locations</a></li>
+              </ul>
+            </div>
+            <div class="footer-links-col">
+              <h4>Legal Desk</h4>
+              <ul>
+                <li><a href="#">Privacy Guidelines</a></li>
+                <li><a href="#">Ordering Terms</a></li>
+                <li><a href="#">FSSAI Lic: 11224999</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p>© 2024 Fig &amp; Flour Patisserie Pvt. Ltd. All rights reserved. Handcrafted with love in Mumbai.</p>
+        </div>
+      </footer>
     </div>
   </section>
 
-</main>
+</div><!-- /#fullpage -->
 
-<!-- ── Footnote & Navigation Footer ───────────── -->
-<footer aria-label="Site footer">
-  <div class="footer-top">
-    <div class="footer-headline" aria-hidden="true">Fig &amp; Flour</div>
-    <div class="footer-grid">
-      <div class="footer-brand">
-        <span class="footer-brand-title">Fig &amp; Flour</span>
-        <span class="footer-brand-sub">Artisan Patisserie · Est. 1998</span>
-        <p class="footer-tagline">"Every dessert tells a story — and ours are baked with love, passion, and the finest ingredients from around the world."</p>
-        <div class="footer-socials">
-          <a href="#" class="fsocial" aria-label="Instagram">📷</a>
-          <a href="#" class="fsocial" aria-label="Facebook">📘</a>
-          <a href="#" class="fsocial" aria-label="Pinterest">📌</a>
-        </div>
-      </div>
-      <div class="footer-links-col">
-        <h4>Navigation</h4>
-        <ul>
-          <li><a href="#hero">Back to Top</a></li>
-          <li><a href="#menu">Live Menu</a></li>
-          <li><a href="#story">Our Legacy</a></li>
-          <li><a href="#chefs">Meet the Chefs</a></li>
-          <li><a href="#visit">Visit Us</a></li>
-        </ul>
-      </div>
-      <div class="footer-links-col">
-        <h4>Contact Desk</h4>
-        <ul>
-          <li><a href="tel:+912242424242">+91 22 4242 4242</a></li>
-          <li><a href="mailto:hello@figandflour.in">hello@figandflour.in</a></li>
-          <li><a href="https://wa.me/919876543210">WhatsApp Order Line</a></li>
-          <li><a href="#visit">Mumbai Locations</a></li>
-        </ul>
-      </div>
-      <div class="footer-links-col">
-        <h4>Legal Desk</h4>
-        <ul>
-          <li><a href="#">Privacy Guidelines</a></li>
-          <li><a href="#">Ordering Terms</a></li>
-          <li><a href="#">FSSAI Lic: 11224999</a></li>
-        </ul>
-      </div>
-    </div>
-  </div>
-  <div class="footer-bottom">
-    <p>© 2024 Fig &amp; Flour Patisserie Pvt. Ltd. All rights reserved. Handcrafted with love in Mumbai.</p>
-  </div>
-</footer>
+<!-- ── Page Navigation Indicator dots ─────────── -->
+<nav id="page-nav" aria-label="Page navigation">
+  <div class="pnav-dot" data-pg="0"><div class="pnav-indicator"></div><span class="pnav-lbl">Pistachio Rose</span></div>
+  <div class="pnav-dot" data-pg="1"><div class="pnav-indicator"></div><span class="pnav-lbl">Vanilla Drip</span></div>
+  <div class="pnav-dot" data-pg="2"><div class="pnav-indicator"></div><span class="pnav-lbl">Dark Chocolate</span></div>
+  <div class="pnav-dot" data-pg="3"><div class="pnav-indicator"></div><span class="pnav-lbl">Live Menu</span></div>
+  <div class="pnav-dot" data-pg="4"><div class="pnav-indicator"></div><span class="pnav-lbl">Our Story</span></div>
+  <div class="pnav-dot" data-pg="5"><div class="pnav-indicator"></div><span class="pnav-lbl">Chefs</span></div>
+  <div class="pnav-dot" data-pg="6"><div class="pnav-indicator"></div><span class="pnav-lbl">Visit Us</span></div>
+  <div class="pnav-dot" data-pg="7"><div class="pnav-indicator"></div><span class="pnav-lbl">FAQ &amp; Contact</span></div>
+</nav>
+
+<!-- Page Counter overlay -->
+<div id="page-counter" aria-hidden="true">
+  <span class="pgc-num" id="pgcCurrent">01</span>
+  <span class="pgc-line"></span>
+  <span class="pgc-total" id="pgcTotal">08</span>
+</div>
 
 <!-- ── Shopping Cart Drawer ────────────────────── -->
 <div id="cart-overlay" aria-hidden="true" onclick="closeCart()"></div>
